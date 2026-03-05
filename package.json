@@ -1,0 +1,19 @@
+{
+  "name": "autodrive",
+  "version": "1.0.0",
+  "description": "Flask vehicle rental app",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./app/static/css/input.css -o ./app/static/css/style.css",
+    "watch:css": "npx tailwindcss -i ./app/static/css/input.css -o ./app/static/css/style.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.10"
+  }
+}

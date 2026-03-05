@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-extrabold text-gray-900">Welcome, {{ current_user.first_name }}!</h1>
+    <h2 class="mt-6 text-2xl font-semibold text-gray-800">My Bookings</h2>
+
+    {% if bookings %}
+    <div class="mt-8 flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pickup Location</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Driver</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for booking in bookings %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ url_for('static', filename='img/' + booking.vehicle.image_file) }}" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ booking.vehicle.name }}</div>
+                                            <div class="text-sm text-gray-500">{{ booking.vehicle.category }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ booking.location }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ booking.start_date.strftime('%d %b, %Y') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ booking.end_date.strftime('%d %b, %Y') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {% if booking.with_driver %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Yes</span>
+                                    {% else %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">No</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">₹{{ "{:,.0f}".format(booking.total_price) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    {% set days_until = (booking.start_date - today).days %}
+                                    {% if days_until > 2 %}
+                                        <form action="{{ url_for('routes.cancel_booking', booking_id=booking.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="text-red-600 hover:text-red-800">Cancel</button>
+                                        </form>
+                                    {% elif booking.start_date > today %}
+                                        <span class="text-gray-500 text-xs">Too late to cancel</span>
+                                    {% else %}
+                                        <span class="text-green-600 text-xs">Completed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-md p-6">
+        <p class="text-center text-blue-800">You have not made any bookings yet.</p>
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('routes.vehicles') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                Find a Car
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

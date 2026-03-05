@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-extrabold text-gray-900 text-center">{{ title }}</h1>
+        <p class="mt-4 text-xl text-gray-600 text-center">Find the perfect ride for your journey.</p>
+
+        <div class="mt-12 text-center">
+            <a href="{{ url_for('routes.vehicles') }}" class="inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium m-1 hover:bg-gray-300">All</a>
+            <a href="{{ url_for('routes.vehicles', category='Hatchback') }}" class="inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium m-1 hover:bg-gray-300">Hatchback</a>
+            <a href="{{ url_for('routes.vehicles', category='Sedan') }}" class="inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium m-1 hover:bg-gray-300">Sedan</a>
+            <a href="{{ url_for('routes.vehicles', category='SUV') }}" class="inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium m-1 hover:bg-gray-300">SUV</a>
+            <a href="{{ url_for('routes.vehicles', category='MUV') }}" class="inline-block bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium m-1 hover:bg-gray-300">MUV</a>
+        </div>
+
+        <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {% if vehicles %}
+                {% for vehicle in vehicles %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <a href="{{ url_for('routes.vehicle_detail', vehicle_id=vehicle.id) }}" class="block">
+                        <img class="h-64 w-full object-cover" src="{{ url_for('static', filename='img/' + vehicle.image_file) }}" alt="{{ vehicle.name }}">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900">{{ vehicle.name }}</h3>
+                        <p class="mt-1 text-sm font-medium text-gray-500">{{ vehicle.category }}</p>
+                        
+                        <div class="mt-4 flex items-center justify-between">
+                            <span class="text-2xl font-bold text-gray-900">₹{{ "{:,.0f}".format(vehicle.price_per_day) }}<span class="text-sm font-normal text-gray-500">/day</span></span>
+                            <a href="{{ url_for('routes.vehicle_detail', vehicle_id=vehicle.id) }}" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                View Details
+                            </a>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between text-sm text-gray-600">
+                            <span>👥 {{ vehicle.passenger_capacity }} Seats</span>
+                            <span>⛽ {{ vehicle.fuel_type }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-600 text-center md:col-span-2 lg:col-span-3">No vehicles found in this category.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

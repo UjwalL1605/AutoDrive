@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
+    <div class="bg-green-100 rounded-full h-24 w-24 flex items-center justify-center mx-auto">
+        <svg class="h-16 w-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    <h1 class="mt-8 text-4xl font-extrabold text-gray-900">Booking Successful!</h1>
+    <p class="mt-4 text-xl text-gray-600">
+        Your vehicle is confirmed. You can view the details of your trip in your dashboard.
+    </p>
+    <div class="mt-8">
+        <a href="{{ url_for('routes.dashboard') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+            Go to My Bookings
+        </a>
+    </div>
+</div>
+{% endblock %}
